@@ -13,17 +13,17 @@ import java.util.ArrayList;
 /**
  * Created by nils on 02/01/15.
  */
-public class MyItemsAdapter extends ArrayAdapter<MyItem> {
+public class AppItemsAdapter extends ArrayAdapter<AppsManager.App> {
 
 
-    public MyItemsAdapter(Context context, ArrayList<MyItem> myItems) {
-        super(context, 0, myItems);
+    public AppItemsAdapter(Context context, ArrayList<AppsManager.App> appItems) {
+        super(context, 0, appItems);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        MyItem myItem = getItem(position);
+        AppsManager.App app = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
@@ -35,9 +35,9 @@ public class MyItemsAdapter extends ArrayAdapter<MyItem> {
         TextView description = (TextView) convertView.findViewById(R.id.description);
 
         // Populate the data into the template view using the data object
-        titre.setText(myItem.getName());
-        description.setText(myItem.getDescription());
-        icon.setImageResource(myItem.getResId());
+        titre.setText(app.getName());
+        description.setText(app.getDescription());
+        icon.setImageResource(app.getResId());
 
         // Return the completed view to render on screen
         return convertView;

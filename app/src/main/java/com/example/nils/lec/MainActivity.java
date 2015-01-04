@@ -1,28 +1,36 @@
 package com.example.nils.lec;
 
-import android.app.Activity;
 import android.app.ListActivity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.Contacts;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
+import java.util.logging.Handler;
 
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends FragmentActivity {
 
+    /*
+    private static final long SCAN_PERIOD = 10000;
 
-    private ListView listview;
+    BluetoothAdapter bluetoothAdapter;
+    BluetoothLeScanner bluetoothLeScanner;
+    Vector<BluetoothDevice> bluetoothDevices;
+
+    */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,25 +38,89 @@ public class MainActivity extends ListActivity {
 
         setContentView(R.layout.activity_main);
 
-       listview = getListView();
+        if (findViewById(R.id.fragment_container) != null) {
 
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
 
-        ArrayList<MyItem> myItems= new ArrayList<MyItem>();
+            // Create a new Fragment to be placed in the activity layout
+            AppsListFragment appsListFragment = new AppsListFragment();
 
-        myItems.add(new MyItem("Proximity Sensor", "Evaluate distance between your phone and a beacon"));
-        myItems.add(new MyItem(R.drawable.mole, "Titre 2", "Description 2"));
-        myItems.add(new MyItem("Titre 3", "Description 3"));
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            appsListFragment.setArguments(getIntent().getExtras());
 
-
-        MyItemsAdapter myItemsAdapter =
-                new MyItemsAdapter(this, myItems);
-
-        setListAdapter(myItemsAdapter);
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getFragmentManager().beginTransaction().add(R.id.fragment_container, appsListFragment, "apps").commit();
+        }
     }
 
     @Override
+    public void onBackPressed() {
+        // Call to previous state
+        if (getFragmentManager().getBackStackEntryCount() > 0){
+            getFragmentManager().popBackStack();
+        }
+        // Else slide_to_left
+        else super.onBackPressed();
+    }
+
+    /*
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d("Debug", "Position = " + position);
+
+
+        myItems.clear();
+        myItemsAdapter = new MyItemsAdapter(this, myItems);
+        setListAdapter(myItemsAdapter);
+
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
+        bluetoothAdapter.enable();
+
+        bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+
+        bluetoothDevices = new Vector<BluetoothDevice>();
+
+        bluetoothLeScanner.startScan(new ScanCallback() {
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+                super.onScanResult(callbackType, result);
+
+                BluetoothDevice bluetoothDevice = result.getDevice();
+
+                if (bluetoothDevices.contains(bluetoothDevice)) {
+                    Log.d("Debug", "Device already detected");
+                }
+                else {
+                    bluetoothDevices.add(bluetoothDevice);
+                    Log.d("Debug", "New device detected = " + bluetoothDevice.toString());
+                    myItems.add(new MyItem("Proximity Sensor", bluetoothDevice.toString()));
+
+                    //myItemsAdapter = new MyItemsAdapter(this, myItems);
+
+                    setListAdapter(myItemsAdapter);
+                }
+
+            }
+
+            @Override
+            public void onScanFailed(int errorCode) {
+                super.onScanFailed(errorCode);
+
+                Log.d("Debug", "Scan failed = " + errorCode);
+            }
+        });
+
     }
+    */
+
 
 }
