@@ -1,5 +1,7 @@
 package com.example.nils.lec;
 
+import android.bluetooth.BluetoothDevice;
+
 import java.util.ArrayList;
 
 /**
@@ -7,43 +9,35 @@ import java.util.ArrayList;
  */
 public class AppsManager {
 
-    public  class App {
-        public int resId;
-        public String name;
-        public String description;
+    public interface DeviceFilter {
+        public boolean isCompatible(BluetoothDevice bluetoothDevice);
+    }
 
-        public App (int resId, String name, String description) {
-            this.resId = resId;
-            this.name = name;
-            this.description = description;
+    public class App {
+        private ItemList itemList;
+        public DeviceFilter deviceFilter;
+
+        public App(ItemList itemList, DeviceFilter deviceFilter) {
+            this.itemList = itemList;
+            this.deviceFilter = deviceFilter;
         }
 
-        public App (String name, String description) {
-            this.resId = R.drawable.ic_launcher;
-            this.name = name;
-            this.description = description;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public int getResId() {
-            return resId;
-        }
-
+        public ItemList getItemList() { return itemList; }
     }
 
     private ArrayList<App> apps;
 
     public AppsManager () {
         apps = new  ArrayList<App>();
-        apps.add(new App("Titre 1", "Description 1"));
-        apps.add(new App(R.drawable.mole, "Titre 1", "Description 1"));
+
+        apps.add(new App(new ItemList("Proximity sensor", "Evaluate the distance between your phone and a LE Tag"), new DeviceFilter(){
+
+            @Override
+            public boolean isCompatible(BluetoothDevice bluetoothDevice) {
+                return true;
+            }
+        }));
+
     }
 
     public ArrayList<App> getApps() { return apps; }

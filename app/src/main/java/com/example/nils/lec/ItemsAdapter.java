@@ -13,17 +13,17 @@ import java.util.ArrayList;
 /**
  * Created by nils on 02/01/15.
  */
-public class AppItemsAdapter extends ArrayAdapter<AppsManager.App> {
+public class ItemsAdapter extends ArrayAdapter<ItemList> {
 
 
-    public AppItemsAdapter(Context context, ArrayList<AppsManager.App> appItems) {
+    public ItemsAdapter(Context context, ArrayList<ItemList> appItems) {
         super(context, 0, appItems);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        AppsManager.App app = getItem(position);
+        ItemList app = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)

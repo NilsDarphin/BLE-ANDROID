@@ -6,30 +6,45 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by nils on 04/01/15.
  */
 public class AppsListFragment extends ListFragment {
 
-    private AppItemsAdapter appItemsAdapter;
-    private AppsManager appsManager;
+    private ArrayList<ItemList> appItems;
+    private ItemsAdapter itemsAdapter;
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        appsManager = new AppsManager();
-        appItemsAdapter = new AppItemsAdapter(getActivity(), appsManager.getApps());
+        if (itemsAdapter == null) {
 
-        setListAdapter(appItemsAdapter);
+            appItems = new ArrayList<ItemList>();
+
+            for (AppsManager.App app : ((MainActivity) getActivity()).getAppsManager().getApps()) {
+                appItems.add(app.getItemList());
+            }
+
+            itemsAdapter = new ItemsAdapter(getActivity(), appItems);
+
+            setListAdapter(itemsAdapter);
+        }
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        DevicesListFragment devicesListFragment = new DevicesListFragment();
+        DevicesListFragment devicesListFragment = new DevicesListFragment(((MainActivity) getActivity()).getAppsManager().getApps().get(position));
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(DevicesListFragment.ARG_POSITION, position);
+        devicesListFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
 
