@@ -1,13 +1,13 @@
-package com.example.nils.lec;
+package com.example.nils.lec.main_activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.nils.lec.R;
+
 
 public class MainActivity extends FragmentActivity {
-
-
 
     private AppsManager appsManager;
 

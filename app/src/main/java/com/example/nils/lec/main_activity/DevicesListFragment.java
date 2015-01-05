@@ -1,4 +1,4 @@
-package com.example.nils.lec;
+package com.example.nils.lec.main_activity;
 
 import android.app.ListFragment;
 import android.bluetooth.BluetoothAdapter;
@@ -8,8 +8,16 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import com.example.nils.lec.ApplicationActivity;
+import com.example.nils.lec.R;
+import com.example.nils.lec.proximity_activity.ProximityActivity;
 
 import java.util.Vector;
 
@@ -22,8 +30,6 @@ public class DevicesListFragment extends ListFragment {
     private ItemsAdapter itemsAdapter;
     private DevicesManager devicesManager;
     private AppsManager.App appSelected;
-
-    private static final long SCAN_PERIOD = 10000;
 
     BluetoothAdapter bluetoothAdapter;
     BluetoothLeScanner bluetoothLeScanner;
@@ -70,25 +76,24 @@ public class DevicesListFragment extends ListFragment {
                     if (bluetoothDevices.contains(bluetoothDevice) == false) {
                         bluetoothDevices.add(bluetoothDevice);
 
+                        // Compatibility test
                         if (appSelected.deviceFilter.isCompatible(bluetoothDevice)) {
-                            Log.d("Debug", "Compatible");
                             devicesManager.add(new ItemList(bluetoothDevice.getName(), bluetoothDevice.toString()));
                             itemsAdapter.notifyDataSetChanged();
                         }
-                        else
-                            Log.d("Debug", "Non compatible");
                     }
-                }
-
-
-                @Override
-                public void onScanFailed(int errorCode) {
-                    super.onScanFailed(errorCode);
-
-                    Log.d("Debug", "Scan failed = " + errorCode);
                 }
             });
         }
 
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        Intent intent = new Intent(getActivity(), ProximityActivity.class);
+        intent.putExtra(ApplicationActivity.DEVICE_ADDRESS, devicesManager.getDevices().get(position).getDescription());
+        startActivity(intent);
     }
 }

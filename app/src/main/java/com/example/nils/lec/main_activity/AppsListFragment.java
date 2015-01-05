@@ -1,10 +1,12 @@
-package com.example.nils.lec;
+package com.example.nils.lec.main_activity;
 
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
+import com.example.nils.lec.R;
 
 import java.util.ArrayList;
 

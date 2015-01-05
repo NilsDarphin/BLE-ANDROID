@@ -1,4 +1,6 @@
-package com.example.nils.lec;
+package com.example.nils.lec.main_activity;
+
+import com.example.nils.lec.R;
 
 /**
  * Created by nils on 04/01/15.

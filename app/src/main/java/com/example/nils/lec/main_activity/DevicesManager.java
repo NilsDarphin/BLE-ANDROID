@@ -1,4 +1,4 @@
-package com.example.nils.lec;
+package com.example.nils.lec.main_activity;
 
 import java.util.ArrayList;
 
