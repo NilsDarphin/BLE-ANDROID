@@ -3,6 +3,7 @@ package com.example.nils.lec.main_activity;
 import android.bluetooth.BluetoothDevice;
 
 import com.example.nils.lec.ApplicationActivity;
+import com.example.nils.lec.proximity_activity.LandraiderActivity;
 import com.example.nils.lec.proximity_activity.ProximityActivity;
 
 import java.util.ArrayList;
@@ -46,12 +47,19 @@ public class AppsManager {
             @Override
             public boolean isCompatible(BluetoothDevice bluetoothDevice) {
 
-                if (bluetoothDevice.getName().equals("WICED Sense Kit"))
-                    return true;
+                return true;
 
-                return false;
             }
         }, ProximityActivity.class));
+
+        apps.add(new App(new ItemList("Land Raider", "Control a bluetooth car"), new DeviceFilter(){
+
+            @Override
+            public boolean isCompatible(BluetoothDevice bluetoothDevice) {
+
+                return true;
+            }
+        }, LandraiderActivity.class));
 
     }
 

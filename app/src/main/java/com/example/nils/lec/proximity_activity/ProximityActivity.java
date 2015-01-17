@@ -22,10 +22,7 @@ import com.example.nils.lec.main_activity.ItemList;
 
 public class ProximityActivity extends ApplicationActivity {
 
-    private Activity activity;
-
     private ProgressBar progressBar;
-
     private BluetoothGatt bluetoothGatt;
 
     @Override
@@ -33,46 +30,33 @@ public class ProximityActivity extends ApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proximity);
 
-        activity = this;
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+    @Override
+    protected void onBluetoothDeviceFound() {
+        super.onBluetoothDeviceFound();
 
-        bluetoothLeScanner.startScan(new ScanCallback() {
+        bluetoothGatt = bluetoothDevice.connectGatt(this, true, new BluetoothGattCallback() {
             @Override
-            public void onScanResult(int callbackType, ScanResult result) {
-                super.onScanResult(callbackType, result);
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                super.onConnectionStateChange(gatt, status, newState);
 
-                if (result.getDevice().getAddress().equals(getIntent().getStringExtra(DEVICE_ADDRESS))) {
-                    bluetoothDevice = result.getDevice();
-
-                    bluetoothGatt = bluetoothDevice.connectGatt(activity, true, new BluetoothGattCallback() {
-                        @Override
-                        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                            super.onConnectionStateChange(gatt, status, newState);
-
-                            if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_CONNECTED) {
-                                bluetoothGatt.readRemoteRssi();
-                            }
-                        }
-
-                        @Override
-                        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-                            super.onReadRemoteRssi(gatt, rssi, status);
-
-                            progressBar.setProgress(rssi + 105);
-
-                            bluetoothGatt.readRemoteRssi();
-                        }
-                    });
+                if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_CONNECTED) {
+                    bluetoothGatt.readRemoteRssi();
                 }
             }
+
+            @Override
+            public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+                super.onReadRemoteRssi(gatt, rssi, status);
+
+                progressBar.setProgress(rssi + 105);
+
+                if (bluetoothGatt != null)
+                    bluetoothGatt.readRemoteRssi();
+            }
         });
-
-
     }
 
     @Override
@@ -80,23 +64,19 @@ public class ProximityActivity extends ApplicationActivity {
         super.onStop();
 
         bluetoothGatt.disconnect();
+        bluetoothGatt = null;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_proximity, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
