@@ -3,7 +3,7 @@ package com.example.nils.lec.main_activity;
 import android.bluetooth.BluetoothDevice;
 
 import com.example.nils.lec.ApplicationActivity;
-import com.example.nils.lec.proximity_activity.LandraiderActivity;
+import com.example.nils.lec.landraider_activity.LandraiderActivity;
 import com.example.nils.lec.proximity_activity.ProximityActivity;
 
 import java.util.ArrayList;

@@ -9,5 +9,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_proximity">ProximityActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_landraider">LandraiderActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

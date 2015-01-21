@@ -23,6 +23,12 @@
             android:name=".proximity_activity.ProximityActivity"
             android:label="@string/title_activity_proximity" >
         </activity>
+        <activity
+            android:name=".landraider_activity.LandraiderActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_landraider"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>

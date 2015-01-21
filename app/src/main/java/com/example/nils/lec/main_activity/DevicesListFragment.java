@@ -92,6 +92,8 @@ public class DevicesListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        bluetoothLeScanner.stopScan(null);
+
         Intent intent = new Intent(getActivity(), appSelected.getApplicationActivity());
         intent.putExtra(ApplicationActivity.DEVICE_ADDRESS, devicesManager.getDevices().get(position).getDescription());
         startActivity(intent);

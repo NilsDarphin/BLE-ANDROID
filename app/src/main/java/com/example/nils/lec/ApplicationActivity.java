@@ -35,7 +35,7 @@ public abstract class ApplicationActivity extends Activity{
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        final BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
         bluetoothLeScanner.startScan(new ScanCallback() {
             @Override
@@ -45,6 +45,14 @@ public abstract class ApplicationActivity extends Activity{
                 if (result.getDevice().getAddress().equals(getIntent().getStringExtra(DEVICE_ADDRESS))) {
                     bluetoothDevice = result.getDevice();
 
+                    bluetoothLeScanner.stopScan(new ScanCallback() {
+                        @Override
+                        public void onScanResult(int callbackType, ScanResult result) {
+                            super.onScanResult(callbackType, result);
+
+
+                        }
+                    });
                     onBluetoothDeviceFound();
                 }
             }
