@@ -15,9 +15,6 @@ public class LandraiderActivity extends ApplicationActivity {
     private BluetoothGatt bluetoothGatt;
     private Landraider landraider;
 
-    private boolean rightOutput = false;
-    private boolean leftOutput = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,23 +30,22 @@ public class LandraiderActivity extends ApplicationActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int rightPower = 0;
+                if (landraider != null && landraider.isReady()) {
+                    int rightPower = 0;
 
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        rightPower = (int) (rightView.getBottom()/2 - event.getY());
-                        break;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_MOVE:
+                            rightPower = (int) (rightView.getBottom() / 2 - event.getY());
+                            break;
 
-                    case MotionEvent.ACTION_UP:
-                        rightPower = 0;
+                        case MotionEvent.ACTION_UP:
+                            rightPower = 0;
+                    }
+
+                    landraider.setRightOutputStatus(rightPower > 0);
+                    landraider.setRightOutputPower((100 * Math.abs(rightPower)) / (rightView.getBottom() / 2));
                 }
-
-                if (landraider != null) {
-                    landraider.updateRightOutputStatus(rightPower > 0);
-                    landraider.updateRightOutputPower((100*Math.abs(rightPower))/(rightView.getBottom()/2));
-                }
-
                 return true;
             }
         });
@@ -58,23 +54,22 @@ public class LandraiderActivity extends ApplicationActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int leftPower = 0;
+                if (landraider != null && landraider.isReady()) {
+                    int leftPower = 0;
 
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        leftPower = (int) (leftView.getBottom()/2 - event.getY());
-                        break;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_MOVE:
+                            leftPower = (int) (leftView.getBottom() / 2 - event.getY());
+                            break;
 
-                    case MotionEvent.ACTION_UP:
-                        leftPower = 0;
+                        case MotionEvent.ACTION_UP:
+                            leftPower = 0;
+                    }
+
+                    landraider.setLeftOutputStatus(leftPower > 0);
+                    landraider.setLeftOutputPower((100 * Math.abs(leftPower)) / (rightView.getBottom() / 2));
                 }
-
-                if (landraider != null) {
-                    landraider.updateLeftOutputStatus(leftPower > 0);
-                    landraider.updateLeftOutputPower((100*Math.abs(leftPower))/(rightView.getBottom()/2));
-                }
-
                 return true;
             }
         });

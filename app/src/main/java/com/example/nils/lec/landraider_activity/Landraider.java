@@ -21,152 +21,93 @@ public class Landraider extends BluetoothGattCallback {
     private BluetoothGattCharacteristic leftAnalogOutputCharacteristic;
     private BluetoothGattCharacteristic rightAnalogOutputCharacteristic;
 
-    private boolean digitalOutputChanged = false;
-    private boolean leftAnalogOutputChanged = false;
-    private boolean rightAnalogOutputChanged = false;
-
     private boolean rightOutputStatus = true;
     private boolean leftOutputStatus = true;
     private int rightOutputPower = 0;
     private int leftOutputPower = 0;
 
-    private int updateStatus = 0;
+    private boolean lastrightOutputStatus = true;
+    private boolean lastLeftOutputStatus = true;
+    private int lastRightOutputPower = 0;
+    private int lastLeftOutputPower = 0;
+
     private boolean isUpdating = false;
+    private boolean isReady = false;
 
     public Landraider() {}
 
     public void sendUpdate() {
-        switch(updateStatus) {
-            case 0:
-                if (digitalOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(digitalOutputCharacteristic))
-                        digitalOutputChanged = false;
-                    break;
-                }
-                if (leftAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(leftAnalogOutputCharacteristic))
-                        leftAnalogOutputChanged = false;
-                    break;
-                }
-                if (rightAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(rightAnalogOutputCharacteristic))
-                        rightAnalogOutputChanged = false;
-                    break;
-                }
-            case 1:
-                if (leftAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(leftAnalogOutputCharacteristic))
-                        leftAnalogOutputChanged = false;
-                    break;
-                }
-                if (rightAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(rightAnalogOutputCharacteristic))
-                        rightAnalogOutputChanged = false;
-                    break;
-                }
-                if (digitalOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(digitalOutputCharacteristic))
-                        digitalOutputChanged = false;
-
-                    break;
-                }
-            case 2:
-                if (rightAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(rightAnalogOutputCharacteristic))
-                        rightAnalogOutputChanged = false;
-                    break;
-                }
-                if (digitalOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(digitalOutputCharacteristic))
-                        digitalOutputChanged = false;
-
-                    break;
-                }
-                if (leftAnalogOutputChanged) {
-                    if (bluetoothGatt.writeCharacteristic(leftAnalogOutputCharacteristic))
-                        leftAnalogOutputChanged = false;
-                    break;
-                }
-        }
-
-        updateStatus++;
-        if (updateStatus == 3)
-            updateStatus = 0;
-    }
-
-    public void updateLeftOutputStatus(boolean newStatus) {
-        if (newStatus != leftOutputStatus) {
+        if (rightOutputStatus != lastrightOutputStatus || leftOutputStatus != lastLeftOutputStatus) {
             int output = 0;
-
-            leftOutputStatus = newStatus;
-            digitalOutputChanged = true;
 
             if (rightOutputStatus)
                 output += 4;
             if (leftOutputStatus)
                 output += 1;
 
-            if (digitalOutputCharacteristic != null)
-                digitalOutputCharacteristic.setValue(output, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            digitalOutputCharacteristic.setValue(output, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            digitalOutputCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+            if (bluetoothGatt.writeCharacteristic(digitalOutputCharacteristic)) {
+                lastrightOutputStatus = rightOutputStatus;
+                lastLeftOutputStatus = leftOutputStatus;
+                isUpdating = true;
+            }
+        }
+        else if (leftOutputPower != lastLeftOutputPower || rightOutputPower != lastRightOutputPower) {
 
+            if (Math.abs(leftOutputPower - lastLeftOutputPower) >= Math.abs(rightOutputPower - lastRightOutputPower)) {
+                leftAnalogOutputCharacteristic.setValue((leftOutputPower*0xffff)/100, BluetoothGattCharacteristic.FORMAT_UINT16, 0);
+                leftAnalogOutputCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                if (bluetoothGatt.writeCharacteristic(leftAnalogOutputCharacteristic)) {
+                    lastLeftOutputPower = leftOutputPower;
+                    isUpdating = true;
+                }
+            }
+            else {
+                rightAnalogOutputCharacteristic.setValue((rightOutputPower*0xffff)/100, BluetoothGattCharacteristic.FORMAT_UINT16, 0);
+                rightAnalogOutputCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                if (bluetoothGatt.writeCharacteristic(rightAnalogOutputCharacteristic)) {
+                    lastRightOutputPower = rightOutputPower;
+                    isUpdating = true;
+                }
+            }
+        }
+        Log.d("Debug", "New update = " + isUpdating);
+    }
+
+    public void tryUpdate() {
+        Log.d("Debug", "Try update");
+        if (isUpdating == false) {
             sendUpdate();
         }
     }
 
-    public void updateRightOutputStatus(boolean newStatus) {
-        if (newStatus != rightOutputStatus) {
-            int output = 0;
-
-            rightOutputStatus = newStatus;
-            digitalOutputChanged = true;
-
-            if (rightOutputStatus)
-                output += 4;
-            if (leftOutputStatus)
-                output += 1;
-
-            if (digitalOutputCharacteristic != null)
-                digitalOutputCharacteristic.setValue(output, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
-
-            sendUpdate();
-        }
+    public void setRightOutputStatus(boolean rightOutputStatus) {
+        this.rightOutputStatus = rightOutputStatus;
+        tryUpdate();
     }
 
-    public void updateLeftOutputPower(int newPower) {
-        Log.d("Debug", "New Left Power = " + newPower);
-        int power;
-        if (newPower < 0) power = 0;
-        else if (newPower > 100) power = 100;
-        else power = newPower;
-
-        Log.d("Debug", "Left Power = " + power);
-        if (power != rightOutputPower) {
-            Log.d("Debug", "New Left Power = " + power);
-            leftOutputPower = power;
-            leftAnalogOutputChanged = true;
-
-            if (leftAnalogOutputCharacteristic != null)
-                leftAnalogOutputCharacteristic.setValue((power*0xffff)/100, BluetoothGattCharacteristic.FORMAT_UINT16, 0);
-
-            sendUpdate();
-        }
+    public void setLeftOutputStatus(boolean leftOutputStatus) {
+        this.leftOutputStatus = leftOutputStatus;
+        tryUpdate();
     }
 
-    public void updateRightOutputPower(int newPower) {
-        int power;
-        if (newPower < 0) power = 0;
-        else if (newPower > 100) power = 100;
-        else power = newPower;
+    public void setRightOutputPower(int rightOutputPower) {
+        if (rightOutputPower > 100) this.rightOutputPower = 100;
+        else if (rightOutputPower < 0) this.rightOutputPower = 0;
+        else this.rightOutputPower = rightOutputPower;
+        tryUpdate();
+    }
 
-        if (power != leftOutputPower) {
-            rightOutputPower = power;
-            rightAnalogOutputChanged = true;
+    public void setLeftOutputPower(int leftOutputPower) {
+        if (leftOutputPower > 100) this.leftOutputPower = 100;
+        else if (leftOutputPower < 0) this.leftOutputPower = 0;
+        else this.leftOutputPower = leftOutputPower;
+        tryUpdate();
+    }
 
-            if (rightAnalogOutputCharacteristic != null)
-                rightAnalogOutputCharacteristic.setValue((power*0xffff)/100, BluetoothGattCharacteristic.FORMAT_UINT16, 0);
-
-            sendUpdate();
-        }
+    public boolean isReady() {
+        return isReady;
     }
 
     @Override
@@ -188,8 +129,10 @@ public class Landraider extends BluetoothGattCallback {
     @Override
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         super.onCharacteristicWrite(gatt, characteristic, status);
+        Log.d("Debug", "Update done !");
+        isUpdating = false;
 
-        sendUpdate();
+        tryUpdate();
     }
 
     @Override
@@ -221,8 +164,10 @@ public class Landraider extends BluetoothGattCallback {
                     }
 
                 }
-                if (digitalOutputCharacteristic != null && leftAnalogOutputCharacteristic != null && rightAnalogOutputCharacteristic != null)
+                if (digitalOutputCharacteristic != null && leftAnalogOutputCharacteristic != null && rightAnalogOutputCharacteristic != null) {
+                    isReady = true;
                     Log.d("Debug", "OK chars");
+                }
             }
         }
     }
