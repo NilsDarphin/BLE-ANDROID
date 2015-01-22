@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import com.example.nils.lec.ItemList;
+import com.example.nils.lec.ItemsAdapter;
 import com.example.nils.lec.R;
 
 import java.util.ArrayList;

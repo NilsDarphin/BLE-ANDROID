@@ -1,24 +1,14 @@
 package com.example.nils.lec.proximity_activity;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.example.nils.lec.ApplicationActivity;
 import com.example.nils.lec.R;
-import com.example.nils.lec.main_activity.ItemList;
 
 public class ProximityActivity extends ApplicationActivity {
 

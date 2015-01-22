@@ -10,14 +10,12 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.nils.lec.ApplicationActivity;
-import com.example.nils.lec.R;
-import com.example.nils.lec.proximity_activity.ProximityActivity;
+import com.example.nils.lec.ItemList;
+import com.example.nils.lec.ItemsAdapter;
 
 import java.util.Vector;
 

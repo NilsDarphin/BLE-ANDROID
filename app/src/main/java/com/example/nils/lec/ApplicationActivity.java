@@ -12,9 +12,7 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Bundle;
 
-/**
- * Created by nils on 05/01/15.
- */
+
 public abstract class ApplicationActivity extends Activity{
 
     public final static String DEVICE_ADDRESS = "mac";

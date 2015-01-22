@@ -3,15 +3,14 @@ package com.example.nils.lec.main_activity;
 import android.bluetooth.BluetoothDevice;
 
 import com.example.nils.lec.ApplicationActivity;
+import com.example.nils.lec.ItemList;
 import com.example.nils.lec.R;
+import com.example.nils.lec.io_activity.IOActivity;
 import com.example.nils.lec.landraider_activity.LandraiderActivity;
 import com.example.nils.lec.proximity_activity.ProximityActivity;
 
 import java.util.ArrayList;
 
-/**
- * Created by nils on 04/01/15.
- */
 public class AppsManager {
 
     public interface DeviceFilter {
@@ -57,10 +56,21 @@ public class AppsManager {
 
             @Override
             public boolean isCompatible(BluetoothDevice bluetoothDevice) {
-
-                return true;
+                if (bluetoothDevice.getName().equals("BLE AutomationIO"))
+                    return true;
+                return false;
             }
         }, LandraiderActivity.class));
+
+        apps.add(new App(new ItemList("IO", "Control your IOs !"), new DeviceFilter(){
+
+            @Override
+            public boolean isCompatible(BluetoothDevice bluetoothDevice) {
+                if (bluetoothDevice.getName().equals("BLE AutomationIO"))
+                    return true;
+                return false;
+            }
+        }, IOActivity.class));
 
     }
 

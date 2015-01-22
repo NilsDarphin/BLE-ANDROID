@@ -24,6 +24,10 @@
             android:label="@string/title_activity_proximity" >
         </activity>
         <activity
+            android:name=".io_activity.IOActivity"
+            android:label="@string/title_activity_io" >
+        </activity>
+        <activity
             android:name=".landraider_activity.LandraiderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_landraider"

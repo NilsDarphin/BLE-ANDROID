@@ -1,5 +1,7 @@
 package com.example.nils.lec.main_activity;
 
+import com.example.nils.lec.ItemList;
+
 import java.util.ArrayList;
 
 /**

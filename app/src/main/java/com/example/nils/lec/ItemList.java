@@ -1,4 +1,4 @@
-package com.example.nils.lec.main_activity;
+package com.example.nils.lec;
 
 import com.example.nils.lec.R;
 
