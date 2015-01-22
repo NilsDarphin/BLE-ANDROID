@@ -117,6 +117,10 @@ public class Landraider extends BluetoothGattCallback {
         return isReady;
     }
 
+    public void stop() {
+        bluetoothGatt.disconnect();
+    }
+
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
         Log.d("Debug", "Status changed");

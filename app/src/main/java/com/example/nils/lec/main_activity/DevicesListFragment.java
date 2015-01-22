@@ -31,6 +31,7 @@ public class DevicesListFragment extends ListFragment {
 
     BluetoothAdapter bluetoothAdapter;
     BluetoothLeScanner bluetoothLeScanner;
+    ScanCallback scanCallback;
     Vector<BluetoothDevice> bluetoothDevices;
 
     public DevicesListFragment (AppsManager.App app) {
@@ -44,9 +45,6 @@ public class DevicesListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         if (devicesManager == null) {
-
-
-            //appSelected = ((MainActivity) getActivity()).getAppsManager().getApps().get(savedInstanceState.getInt(ARG_POSITION));
 
             devicesManager = new DevicesManager();
             itemsAdapter = new ItemsAdapter(getActivity(), devicesManager.getDevices());
@@ -64,7 +62,7 @@ public class DevicesListFragment extends ListFragment {
             bluetoothDevices = new Vector<BluetoothDevice>();
 
 
-            bluetoothLeScanner.startScan(new ScanCallback() {
+            scanCallback = new ScanCallback() {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
@@ -81,7 +79,8 @@ public class DevicesListFragment extends ListFragment {
                         }
                     }
                 }
-            });
+            };
+            bluetoothLeScanner.startScan(scanCallback);
         }
 
     }
@@ -90,7 +89,7 @@ public class DevicesListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        bluetoothLeScanner.stopScan(null);
+        bluetoothLeScanner.stopScan(scanCallback);
 
         Intent intent = new Intent(getActivity(), appSelected.getApplicationActivity());
         intent.putExtra(ApplicationActivity.DEVICE_ADDRESS, devicesManager.getDevices().get(position).getDescription());

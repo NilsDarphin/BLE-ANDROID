@@ -11,6 +11,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 
 public abstract class ApplicationActivity extends Activity{
@@ -18,6 +19,7 @@ public abstract class ApplicationActivity extends Activity{
     public final static String DEVICE_ADDRESS = "mac";
 
     protected BluetoothDevice bluetoothDevice;
+    private ScanCallback scanCallback;
 
     Activity activity;
 
@@ -35,26 +37,23 @@ public abstract class ApplicationActivity extends Activity{
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         final BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        bluetoothLeScanner.startScan(new ScanCallback() {
+        scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
 
+                Log.d("Debug", "Scan result");
+
                 if (result.getDevice().getAddress().equals(getIntent().getStringExtra(DEVICE_ADDRESS))) {
                     bluetoothDevice = result.getDevice();
 
-                    bluetoothLeScanner.stopScan(new ScanCallback() {
-                        @Override
-                        public void onScanResult(int callbackType, ScanResult result) {
-                            super.onScanResult(callbackType, result);
-
-
-                        }
-                    });
+                    bluetoothLeScanner.stopScan(scanCallback);
                     onBluetoothDeviceFound();
                 }
             }
-        });
+        };
+
+        bluetoothLeScanner.startScan(scanCallback);
     }
 
     protected void onBluetoothDeviceFound() {}

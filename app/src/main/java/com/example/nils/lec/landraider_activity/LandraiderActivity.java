@@ -109,4 +109,11 @@ public class LandraiderActivity extends ApplicationActivity {
             bluetoothDevice.connectGatt(this, false, landraider);
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        landraider.stop();
+    }
 }
