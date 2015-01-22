@@ -5,15 +5,21 @@ import com.example.nils.lec.R;
 
 import android.bluetooth.BluetoothGatt;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class LandraiderActivity extends ApplicationActivity {
 
-    private BluetoothGatt bluetoothGatt;
     private Landraider landraider;
+
+    private TextView landraiderTextView;
+    private ProgressBar landraiderProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,11 @@ public class LandraiderActivity extends ApplicationActivity {
 
         final View rightView = findViewById(R.id.rightView);
         final View leftView = findViewById(R.id.leftView);
+        landraiderTextView = (TextView)findViewById(R.id.landraiderTextView);
+        landraiderProgressBar = (ProgressBar) findViewById(R.id.landraiderProgressBar);
+
+        landraiderProgressBar.animate();
+
 
         rightView.setOnTouchListener(new View.OnTouchListener(){
 
@@ -82,8 +93,20 @@ public class LandraiderActivity extends ApplicationActivity {
         Log.d("Debug", "onBluetoothDeviceFound");
 
         if (landraider == null) {
-            landraider = new Landraider();
-            bluetoothGatt = bluetoothDevice.connectGatt(this, false, landraider);
+            landraider = new Landraider(new Landraider.LandraiderCallbacks() {
+                @Override
+                public void onLandraiderReady() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            landraiderProgressBar.setVisibility(View.INVISIBLE);
+                            landraiderTextView.setText("Ready !");
+                            landraiderTextView.setTextColor(Color.GREEN);
+                        }
+                    });
+                }
+            });
+            bluetoothDevice.connectGatt(this, false, landraider);
         }
     }
 }

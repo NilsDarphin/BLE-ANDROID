@@ -3,6 +3,7 @@ package com.example.nils.lec.main_activity;
 import android.bluetooth.BluetoothDevice;
 
 import com.example.nils.lec.ApplicationActivity;
+import com.example.nils.lec.R;
 import com.example.nils.lec.landraider_activity.LandraiderActivity;
 import com.example.nils.lec.proximity_activity.ProximityActivity;
 
@@ -52,7 +53,7 @@ public class AppsManager {
             }
         }, ProximityActivity.class));
 
-        apps.add(new App(new ItemList("Land Raider", "Control a bluetooth car"), new DeviceFilter(){
+        apps.add(new App(new ItemList(R.drawable.landraider, "Land Raider", "Control a bluetooth car"), new DeviceFilter(){
 
             @Override
             public boolean isCompatible(BluetoothDevice bluetoothDevice) {

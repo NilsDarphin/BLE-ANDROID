@@ -11,13 +11,36 @@
         tools:ignore="UselessParent">
 
         <View
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
 
             android:id="@+id/leftView"
             android:layout_weight="1"
-            android:clickable="false"
-            android:background="@color/black_overlay" />
+            android:clickable="false"/>
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="fill_parent"
+            android:background="@color/black_overlay"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Connexion..."
+                android:id="@+id/landraiderTextView"
+                android:gravity="center_horizontal" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/landraiderProgressBar"
+                android:layout_gravity="center_horizontal"
+                android:animationResolution="20" />
+        </LinearLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

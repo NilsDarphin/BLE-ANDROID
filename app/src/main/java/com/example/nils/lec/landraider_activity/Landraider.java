@@ -13,6 +13,11 @@ import java.util.UUID;
  */
 public class Landraider extends BluetoothGattCallback {
 
+    // The callback interface
+    public interface LandraiderCallbacks {
+        void onLandraiderReady();
+    }
+
     private BluetoothGatt bluetoothGatt;
 
     private BluetoothGattService bluetoothGattAutomationService;
@@ -34,9 +39,13 @@ public class Landraider extends BluetoothGattCallback {
     private boolean isUpdating = false;
     private boolean isReady = false;
 
-    public Landraider() {}
+    private LandraiderCallbacks landraiderCallbacks;
 
-    public void sendUpdate() {
+    public Landraider(LandraiderCallbacks landraiderCallbacks) {
+        this.landraiderCallbacks = landraiderCallbacks;
+    }
+
+    private void sendUpdate() {
         if (rightOutputStatus != lastrightOutputStatus || leftOutputStatus != lastLeftOutputStatus) {
             int output = 0;
 
@@ -72,11 +81,9 @@ public class Landraider extends BluetoothGattCallback {
                 }
             }
         }
-        Log.d("Debug", "New update = " + isUpdating);
     }
 
-    public void tryUpdate() {
-        Log.d("Debug", "Try update");
+    private void tryUpdate() {
         if (isUpdating == false) {
             sendUpdate();
         }
@@ -129,7 +136,6 @@ public class Landraider extends BluetoothGattCallback {
     @Override
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         super.onCharacteristicWrite(gatt, characteristic, status);
-        Log.d("Debug", "Update done !");
         isUpdating = false;
 
         tryUpdate();
@@ -166,7 +172,7 @@ public class Landraider extends BluetoothGattCallback {
                 }
                 if (digitalOutputCharacteristic != null && leftAnalogOutputCharacteristic != null && rightAnalogOutputCharacteristic != null) {
                     isReady = true;
-                    Log.d("Debug", "OK chars");
+                    landraiderCallbacks.onLandraiderReady();
                 }
             }
         }
