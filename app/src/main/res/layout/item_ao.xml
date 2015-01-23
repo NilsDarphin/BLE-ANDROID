@@ -10,7 +10,7 @@
     <SeekBar
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:id="@+id/seekBar"
+        android:id="@+id/seekBarAO"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:progress="0"

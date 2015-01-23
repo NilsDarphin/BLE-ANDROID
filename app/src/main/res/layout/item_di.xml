@@ -11,7 +11,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:id="@+id/progressBar2"
+        android:id="@+id/progressBarDI"
         android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/titre"
         android:layout_alignParentEnd="true"

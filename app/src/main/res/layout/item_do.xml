@@ -5,13 +5,14 @@
     android:padding="6dip"
     android:id="@+id/di">
 
-    <include layout="@layout/item_es"/>
+    <include layout="@layout/item_es"
+        android:id="@+id/include" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/switchDO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignEnd="@+id/titre" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
