@@ -10,33 +10,42 @@
         <include
             android:id="@+id/DO0"
             layout="@layout/item_do"/>
+        <include layout="@layout/item_line"/>
         <include
             android:id="@+id/DO1"
             layout="@layout/item_do"/>
+        <include layout="@layout/item_line"/>
 
         <include
             android:id="@+id/DI0"
             layout="@layout/item_di"/>
+        <include layout="@layout/item_line"/>
         <include
             android:id="@+id/DI1"
             layout="@layout/item_di"/>
+        <include layout="@layout/item_line"/>
 
         <include
             android:id="@+id/AI0"
             layout="@layout/item_ai"/>
+        <include layout="@layout/item_line"/>
         <include
             android:id="@+id/AI1"
             layout="@layout/item_ai"/>
+        <include layout="@layout/item_line"/>
         <include
             android:id="@+id/AI2"
             layout="@layout/item_ai"/>
+        <include layout="@layout/item_line"/>
 
         <include
             android:id="@+id/AO0"
             layout="@layout/item_ao"/>
+        <include layout="@layout/item_line"/>
         <include
             android:id="@+id/AO1"
             layout="@layout/item_ao"/>
+        <include layout="@layout/item_line"/>
 
     </LinearLayout>
 </ScrollView>

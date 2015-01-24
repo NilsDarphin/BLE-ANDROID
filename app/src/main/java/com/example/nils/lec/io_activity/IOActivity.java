@@ -139,22 +139,47 @@ public class IOActivity extends ApplicationActivity {
                 }
 
                 @Override
-                public void onAI0Read(int newValue) {
+                public void onAI0Read(final int newValue) {
+                    ((ProgressBar) ai0.findViewById(R.id.progressBarAI)).setProgress(newValue);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) ai0.findViewById(R.id.valueAI)).setText(newValue + "mV");
+                        }
+                    });
 
                 }
 
                 @Override
-                public void onAI1Read(int newValue) {
-
+                public void onAI1Read(final int newValue) {
+                    ((ProgressBar) ai1.findViewById(R.id.progressBarAI)).setProgress(newValue);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) ai1.findViewById(R.id.valueAI)).setText(newValue + "mV");
+                        }
+                    });
                 }
 
                 @Override
-                public void onAI2Read(int newValue) {
-
+                public void onAI2Read(final int newValue) {
+                    ((ProgressBar) ai2.findViewById(R.id.progressBarAI)).setProgress(newValue);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) ai2.findViewById(R.id.valueAI)).setText(newValue + "mV");
+                        }
+                    });
                 }
             });
             bluetoothDevice.connectGatt(this, false, io);
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        io.stop();
+    }
 }

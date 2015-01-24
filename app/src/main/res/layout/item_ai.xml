@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="3300mV"
-        android:id="@+id/value"
+        android:id="@+id/valueAI"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/progressBarAI"
         android:layout_marginRight="10dip" />

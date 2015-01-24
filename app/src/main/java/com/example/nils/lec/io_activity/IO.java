@@ -39,6 +39,10 @@ public class IO extends BluetoothGattCallback {
     private boolean do0Output;
     private boolean do1Output;
 
+    private boolean ai0Enabled = false;
+    private boolean ai1Enabled = false;
+    private boolean ai2Enabled = false;
+
     private boolean isUpdating = false;
     private boolean isReady = false;
 
@@ -126,6 +130,11 @@ public class IO extends BluetoothGattCallback {
             analogOutputCharacteristic1.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
             bluetoothGatt.writeCharacteristic(analogOutputCharacteristic1);
         }
+    }
+
+
+    public void stop() {
+        bluetoothGatt.disconnect();
     }
 
 
@@ -220,17 +229,65 @@ public class IO extends BluetoothGattCallback {
     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
         super.onDescriptorWrite(gatt, descriptor, status);
 
-        Log.d("Debug", "Good !");
+        if (!ai0Enabled) {
+            bluetoothGatt.setCharacteristicNotification(analogInputCharacteristic0, true);
+            BluetoothGattDescriptor newDescriptor = analogInputCharacteristic0.getDescriptor(
+                    UUID.fromString("00002902-0000-1000-8000-00805F9B34FB"));
+            newDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            bluetoothGatt.writeDescriptor(newDescriptor);
+            ai0Enabled = true;
+        }
+        else if (!ai1Enabled) {
+            bluetoothGatt.setCharacteristicNotification(analogInputCharacteristic1, true);
+            BluetoothGattDescriptor newDescriptor = analogInputCharacteristic1.getDescriptor(
+                    UUID.fromString("00002902-0000-1000-8000-00805F9B34FB"));
+            newDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            bluetoothGatt.writeDescriptor(newDescriptor);
+            ai1Enabled = true;
+        }
+        else if (!ai2Enabled) {
+            bluetoothGatt.setCharacteristicNotification(analogInputCharacteristic2, true);
+            BluetoothGattDescriptor newDescriptor = analogInputCharacteristic2.getDescriptor(
+                    UUID.fromString("00002902-0000-1000-8000-00805F9B34FB"));
+            newDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            bluetoothGatt.writeDescriptor(newDescriptor);
+            ai2Enabled = true;
+        }
     }
 
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         super.onCharacteristicChanged(gatt, characteristic);
 
-        Log.d("Debug", "Changed !");
-        byte[] data = characteristic.getValue();
+        if (characteristic == digitalInputCharacteristic) {
+            byte[] data = characteristic.getValue();
 
-        ioCallbacks.onDI0Read((data[0] & 0x01) == 0x01);
-        ioCallbacks.onDI1Read((data[0] & 0x02) == 0x02);
+            ioCallbacks.onDI0Read((data[0] & 0x01) == 0x01);
+            ioCallbacks.onDI1Read((data[0] & 0x02) == 0x02);
+        }
+        else if (characteristic == analogInputCharacteristic0) {
+            byte[] data = characteristic.getValue();
+
+            ioCallbacks.onAI0Read(bytesToInt(data));
+        }
+        else if (characteristic == analogInputCharacteristic1) {
+            byte[] data = characteristic.getValue();
+
+            ioCallbacks.onAI1Read(bytesToInt(data));
+        }
+        else if (characteristic == analogInputCharacteristic2) {
+            byte[] data = characteristic.getValue();
+
+            ioCallbacks.onAI2Read(bytesToInt(data));
+        }
+    }
+
+    private int bytesToInt(byte[] b){
+        int MASK = 0xFF;
+        int result = 0;
+        result = b[0] & MASK;
+        result = result + ((b[1] & MASK) << 8);
+        Log.d("Debug", "Result = " + result);
+        return result;
     }
 }
