@@ -5,6 +5,11 @@
 LEB is a college project which purpose is to allow you to control remotely the I/Os of a microcontroller.
 The project consists of a Bluetooth low energy shield, its firmware, and an Android application.
 
+### Exemples of use
+
+[Control the IOs from your Android](http://www.youtube.com/watch?v=B23XFl-bA60)
+
+[Control a Car/Robot from your Android](http://www.youtube.com/watch?v=EagJ7pZ6EUM)
 
 
 **LEB works with the following projects :**
